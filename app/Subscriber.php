@@ -8,10 +8,10 @@ use Carbon\Carbon;
 
 class Subscriber extends Model
 {
-	const TIMEZONE = 'Europe/Kiev';
+    const TIMEZONE = 'Europe/Kiev';
     const EXPIRED_MONTHS = 3;
 
-	public $timestamps = false;
+    public $timestamps = false;
      /**
      * The attributes that are mass assignable.
      *
@@ -31,7 +31,7 @@ class Subscriber extends Model
      */
     public static function validateToken(string $token) : bool
     {
-    	$exists = static::select('id')
+        $exists = static::select('id')
             ->where('url_token', '=', $token)
             ->where('revoked', '=', 0)
             ->where('expires_at', '>=', Carbon::now(self::TIMEZONE))
