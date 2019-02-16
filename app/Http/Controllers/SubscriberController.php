@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Subscriber;
 
@@ -33,12 +34,12 @@ class SubscriberController extends Controller
         ]);
 
         // генеруємо унікальний URL
-        $uniqueLink = uniqid(str_random(32));
+        $uniqueLink = Str::uuid()->toString();
 
         $subscriber = new Subscriber([
+            'id' => $uniqueLink,
             'name' => $request->name,
             'email' => $request->email,
-            'url_token' => $uniqueLink,
             'added_on' => Carbon::now(Subscriber::TIMEZONE),
             'expires_at' => Carbon::now(Subscriber::TIMEZONE)->addMonths(Subscriber::EXPIRED_MONTHS)
         ]);
@@ -71,7 +72,7 @@ class SubscriberController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        Subscriber::where('url_token', '=', $id)
+        Subscriber::where('id', '=', $id)
         ->update(['revoked' => 1]);
 
         return view('unsubscribed');

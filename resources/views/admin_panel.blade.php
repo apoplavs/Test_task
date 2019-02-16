@@ -51,13 +51,13 @@
 
                 @foreach ($subscribers as $subscriber)
                 <tr>
-                    <form method="POST" action="{{ url('/admin/'.$subscriber->url_token) }}">
+                    <form method="POST" action="{{ url('/admin/'.$subscriber->id) }}">
                         @csrf
                         {{ method_field('PUT') }}
                         <td>{{ $subscriber->name }}</td>
                         <td>{{ $subscriber->email }}</td>
                         <td>
-                            <a href="{{ url('a/'.$subscriber->url_token) }}" target="_blank">{{ url('a/'.$subscriber->url_token) }}</a>
+                            <a href="{{ url('a/'.$subscriber->id) }}" target="_blank">{{ url('a/'.$subscriber->id) }}</a>
                         </td>
                         <td>
                             <label>
@@ -70,7 +70,7 @@
                         <td class="update"><input type="submit" name="submit" value="Оновити"></td>
                     </form>
 
-                    <form method="POST" action="{{ url('/admin/'.$subscriber->url_token) }}">
+                    <form method="POST" action="{{ url('/admin/'.$subscriber->id) }}">
                         @csrf
                         {{ method_field('DELETE') }}
                         <td class="delete">

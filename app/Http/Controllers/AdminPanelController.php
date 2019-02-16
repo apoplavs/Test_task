@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Subscriber;
 use Carbon\Carbon;
 
@@ -38,16 +39,14 @@ class AdminPanelController extends Controller
             'expires' => 'required|date'
         ]);
 
-        $revoked = ($request->unsubscribed ? 1 : 0);
-
         // генеруємо унікальний URL
-        $uniqueLink = uniqid(str_random(32));
+        $uniqueLink = Str::uuid()->toString();
 
         $subscriber = new Subscriber([
+            'id' => $uniqueLink,
             'name' => $request->name,
             'email' => $request->email,
-            'url_token' => $uniqueLink,
-            'revoked' => $revoked,
+            'revoked' => ($request->unsubscribed ? 1 : 0),
             'added_on' => Carbon::now(Subscriber::TIMEZONE),
             'expires_at' => $request->expires
         ]);
@@ -70,11 +69,9 @@ class AdminPanelController extends Controller
             'expires' => 'required|date'
         ]);
 
-        $revoked = ($request->unsubscribed ? 1 : 0);
-
-        Subscriber::where('url_token', '=', $id)
+        Subscriber::where('id', '=', $id)
         ->update([
-            'revoked' => $revoked,
+            'revoked' => ($request->unsubscribed ? 1 : 0),
             'expires_at' => $request->expires
         ]);
 
@@ -89,7 +86,7 @@ class AdminPanelController extends Controller
      */
     public function destroy(string $id)
     {
-        Subscriber::where('url_token', '=', $id)
+        Subscriber::where('id', '=', $id)
         ->delete();
 
         return redirect('/admin');

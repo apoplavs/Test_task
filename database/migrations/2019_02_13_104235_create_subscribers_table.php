@@ -14,13 +14,14 @@ class CreateSubscribersTable extends Migration
     public function up()
     {
         Schema::create('subscribers', function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id');
             $table->string('name');
             $table->string('email');
-            $table->string('url_token')->unique();
-            $table->boolean('revoked')->default(0);
+            $table->boolean('revoked')->default(false);
             $table->date('added_on');
             $table->date('expires_at');
+
+            $table->primary('id');
         });
     }
 
